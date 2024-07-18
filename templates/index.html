@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Sensor Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <br><br><br><br>
+    <div class="container">
+        <h1 data-aos="fade-down"><i class="fas fa-thermometer-half"></i> Live Sensor Data</h1>
+        <br><br>
+        <div class="row">
+            <div class="col-md-6" data-aos="fade-in">
+                <div class="card"> 
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-thermometer-half"></i> HTU21D Temperature</h5>
+                        <p class="card-text" id="htu_temp"></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-tint"></i> HTU21D Humidity</h5>
+                        <p class="card-text" id="htu_hum"></p>
+                    </div>
+                </div>
+                <!-- New Card for Original DHT11 Temperature -->
+                <div class="card original-card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-thermometer-half"></i> Original DHT11 Temperature</h5>
+                        <p class="card-text" id="original_dht_temp"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" data-aos="fade-in">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-thermometer-half"></i> Corrected DHT11 Temperature</h5>
+                        <p class="card-text" id="dht_temp"></p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-tint"></i> Corrected DHT11 Humidity</h5>
+                        <p class="card-text" id="dht_hum"></p>
+                    </div>
+                </div>
+                <!-- New Card for Original DHT11 Humidity -->
+                <div class="card original-card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-tint"></i> Original DHT11 Humidity</h5>
+                        <p class="card-text" id="original_dht_hum"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="humidityChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <footer class="footer mt-5 py-3 bg-dark text-white text-center">
+        <div class="container">
+            <span>&copy; 2024 Live Sensor Data</span>
+        </div>
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init();
+
+        var socket = io();
+
+        var temperatureData = {
+            labels: [],
+            datasets: [{
+                label: 'HTU21D Temperature (°C)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                data: [],
+                fill: false,
+            }, {
+                label: 'DHT11 Temperature (°C)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                data: [],
+                fill: false,
+            }]
+        };
+
+        var humidityData = {
+            labels: [],
+            datasets: [{
+                label: 'HTU21D Humidity (%)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                data: [],
+                fill: false,
+            }, {
+                label: 'DHT11 Humidity (%)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                data: [],
+                fill: false,
+            }]
+        };
+
+        var tempCtx = document.getElementById('temperatureChart').getContext('2d');
+        var temperatureChart = new Chart(tempCtx, {
+            type: 'line',
+            data: temperatureData,
+            options: {
+                responsive: true,
+                hoverMode: 'index',
+                stacked: false,
+                title: {
+                    display: true,
+                    text: 'Temperature Data'
+                },
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        ticks: {
+                            min: 0,
+                            max: 100,
+                            stepSize: 2,
+                            fontColor: 'white'
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Temperature (°C)',
+                            fontColor: 'white'
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: 'white',
+                            fontSize: 10
+                        }
+                    }]
+                }
+            }
+        });
+
+        var humCtx = document.getElementById('humidityChart').getContext('2d');
+        var humidityChart = new Chart(humCtx, {
+            type: 'line',
+            data: humidityData,
+            options: {
+                responsive: true,
+                hoverMode: 'index',
+                stacked: false,
+                title: {
+                    display: true,
+                    text: 'Humidity Data'
+                },
+                scales: {
+                    yAxes: [{
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        ticks: {
+                            min: 0,
+                            max: 100,
+                            stepSize: 2,
+                            fontColor: 'white'
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Humidity (%)',
+                            fontColor: 'white'
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            fontColor: 'white',
+                            fontSize: 10
+                        }
+                    }]
+                }
+            }
+        });
+
+        socket.on('connect', function() {
+            console.log('Connected to Socket.IO server');
+        });
+
+        socket.on('update', function(data) {
+            console.log('Received update:', data);
+            document.getElementById('original_dht_temp').innerText = data.dht11_temperature !== undefined ? data.dht11_temperature.toFixed(2) + ' °C' : 'N/A';
+            document.getElementById('original_dht_hum').innerText = data.dht11_humidity !== undefined ? data.dht11_humidity.toFixed(2) + ' %' : 'N/A';
+            document.getElementById('htu_temp').innerText = data.htu21d_temperature !== undefined ? data.htu21d_temperature.toFixed(2) + ' °C' : 'N/A';
+            document.getElementById('htu_hum').innerText = data.htu21d_humidity !== undefined ? data.htu21d_humidity.toFixed(2) + ' %' : 'N/A';
+            document.getElementById('dht_temp').innerText = data.corrected_dht_temperature !== undefined ? data.corrected_dht_temperature.toFixed(2) + ' °C' : 'N/A';
+            document.getElementById('dht_hum').innerText = data.corrected_dht_humidity !== undefined ? data.corrected_dht_humidity.toFixed(2) + ' %' : 'N/A';
+
+            temperatureData.labels.push(data.timestamp);
+            temperatureData.datasets[0].data.push(data.htu21d_temperature);
+            temperatureData.datasets[1].data.push(data.corrected_dht_temperature);
+
+            humidityData.labels.push(data.timestamp);
+            humidityData.datasets[0].data.push(data.htu21d_humidity);
+            humidityData.datasets[1].data.push(data.corrected_dht_humidity);
+
+            temperatureChart.update();
+            humidityChart.update();
+        });
+
+        socket.on('disconnect', function() {
+            console.log('Disconnected from Socket.IO server');
+        });
+    </script>
+</body>
+</html>

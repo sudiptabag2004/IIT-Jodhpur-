@@ -1,0 +1,271 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #4057e8;
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #4057e8;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f8f9fa; /* White color for the brand */
+}
+
+.navbar-brand:hover {
+    color: #f8f9fa;
+}
+
+.navbar-toggler-icon {
+    background-color: #f8f9fa; /* White background for the toggler icon */
+}
+
+.navbar-toggler {
+    border: none; /* Remove border from the toggler */
+}
+
+.nav-item {
+    margin-right: 10px; /* Add some spacing between nav items */
+}
+
+.nav-link {
+    color: #f8f9fa;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #f8f9fa;
+}
+
+/* Main content */
+.container {
+    margin-top: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.btn-success {
+    margin-bottom: 20px;
+}
+
+header {
+    background-color: #111;
+    color: white;
+    padding: 10px 0;
+}
+
+.jerry {
+    font-size: x-large;
+    margin-left: 5%;
+}
+
+header h1 {
+    margin: 0;
+}
+
+
+main {
+    padding: 70px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #000000;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #343a40;
+    color: white;
+}
+
+button, .btn-primary, .btn-secondary, .btn-danger {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button:hover, .btn-primary:hover, .btn-secondary:hover, .btn-danger:hover {
+    opacity: 0.8;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: #111;
+    padding-top: 20px;
+    transition: 0.3s;
+    z-index: 1000; /* Adjust the z-index to ensure the sidebar appears on top */
+}
+
+.sidebar img {
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon-container {
+    margin-top: 20px; /* Adjust the margin as needed */
+}
+
+.doctor-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.sidebar h3 {
+    color: white;
+    text-align: center;
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    text-align: center;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+.open-btn {
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+}
+
+.open-btn:hover {
+    color: #818181;
+}
+
+.container {
+    transition: margin-left 0.3s;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 999; /* Ensure the overlay appears below the sidebar */
+    display: none;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    z-index: 1001; /* Ensure the popup appears on top */
+    width: 400px; /* Increase the width of the popup */
+    animation: popupShow 0.3s ease-in-out;
+}
+
+@keyframes popupShow {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.popup-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.popup-form .form-group {
+    margin-bottom: 15px;
+}
+
+.popup-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.popup-form input[type="text"],
+.popup-form input[type="email"],
+.popup-form input[type="password"],
+.popup-form select {
+    width: calc(100% - 20px);
+    padding: 10px; /* Increase the padding */
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.popup-form .form-buttons {
+    display: flex;
+    justify-content: space-between;
+}

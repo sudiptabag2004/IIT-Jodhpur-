@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="static/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Xf/hSUr6eoAFf7aWV5TqNqWUDIxWC5CZmQHVcz3c/AwSErAMR4WxzqKgpKCMdPd49HfZaE3b7DxIgWouNG0bQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.all.min.js"></script>
+
+    <style>
+        .animation{
+            width: 500px;
+             height: 450px;
+        }
+        .hover-box::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            top: 0;
+            left: 0;
+            background-color: #4057e8;
+            border-radius: 4px;
+            z-index: -1;
+            transition: transform 0.7s;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .hover-box:hover::before,
+        .hover-box.active::before {
+            transform: scaleX(1);
+        }
+
+        .hover-box:hover,
+        .hover-box.active {
+            color: white;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #fff;
+            padding-top: 20px;
+            transition: 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #000;
+            display: block;
+            text-align: center;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .open-btn {
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .open-btn:hover {
+            color: #818181;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                display: none;
+            }
+
+            .navbar-brand {
+                flex-grow: 1;
+            }
+
+            .open-btn {
+                display: block;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .open-btn {
+                display: none;
+            }
+        }
+
+        .header-animation {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .header-animation .header {
+            flex: 1 1 40%;
+            text-align: center;
+        }
+
+        .header-animation .animation {
+            flex: 1 1 40%;
+            text-align: center;
+        }
+
+        @media (max-width: 767px) {
+            .header-animation {
+                flex-direction: column;
+                align-items: center; /* Center-align the header */
+                margin-top: 30px; /* Add margin to create gap between navbar and header */
+            }
+
+            .jerry{
+                max-width:100px;
+            
+
+            }
+            .header-animation .header,
+            .header-animation .animation {
+                flex: 1 1 100%;
+                text-align: center; /* Center-align the header */
+            }
+
+            .header-animation .animation dotlottie-player {
+                width: 200px; /* Adjust the width for responsive layout */
+                height: 200px; /* Adjust the height for responsive layout */
+                align-items: center;
+                margin-left:10px
+            }
+        }
+        main {
+            padding: 20px;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            z-index: 1001;
+        }
+
+        .popup-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .popup-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .popup-form .form-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg ">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <span class="brand-text fw-7">Medico</span>
+            </a>
+            <span class="open-btn text-white" onclick="openSidebar()">&#9776;</span>
+    
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white text-nowrap" onclick="goToHomePage()">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white text-nowrap" onclick="logoutConfirmation()">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/doctor" class="nav-link text-white text-nowrap" onclick="">Patients Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="sidebar" class="sidebar">
+        <a href="#" onclick="goToHomePage()">Home</a>
+        <a href="#" onclick="logoutConfirmation()">Logout</a>
+        <a href="/doctor" onclick="">Patients Dashboard</a>
+    </div><br><br>
+
+    <div class="header-animation">
+        <div class="header  hover-box ">
+            <h1 class="display-4 mb-2">Admin Dashboard</h1>
+            
+        </div>
+        <div class="animation jerry">
+            <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script><dotlottie-player src="https://lottie.host/d565a80f-8b38-4545-9c55-0def14a1d252/u9GuOq1q1n.json" background="transparent" speed="1"  direction="1" playMode="normal" loop autoplay></dotlottie-player>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+    <main>
+        <section><br><br>
+            
+            <button id="add-doctor-button" class="btn-primary mt-4">Add New Doctor</button><br>
+            <table id="doctors-table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Doctors data will be populated here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    
+    <div id="add-doctor-popup" class="popup">
+        <form id="add-doctor-form" class="popup-form">
+            <h2>Add New Doctor</h2>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" class="form-control" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="form-buttons">
+                <button type="submit" class="btn btn-primary">Add Doctor</button>
+                <button type="button" class="btn btn-secondary" onclick="closeAddDoctorPopup()">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('add-doctor-button').addEventListener('click', () => {
+            const popup = document.getElementById('add-doctor-popup');
+            popup.style.display = 'block';
+            popup.classList.add('show');
+        });
+
+        function closeAddDoctorPopup() {
+            const popup = document.getElementById('add-doctor-popup');
+            popup.classList.remove('show');
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 300);
+        }
+
+        fetch('/admin/doctors')
+            .then(response => response.json())
+            .then(data => {
+                const doctorsTable = document.querySelector('#doctors-table tbody');
+                data.doctors.forEach(doctor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doctor.email}</td>
+                        <td>${doctor.name}</td>
+                        <td>${doctor.role}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="confirmDeleteDoctor('${doctor.email}')">Delete</button>
+                        </td>
+                    `;
+                    doctorsTable.appendChild(row);
+                });
+            });
+
+        document.getElementById('add-doctor-form').addEventListener('submit', event => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/admin/add_doctor', {
+                method: 'POST',
+                body: JSON.stringify(Object.fromEntries(formData)),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire(
+                        'Doctor Added',
+                        'The doctor has been added successfully.',
+                        'success'
+                    ).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire(
+                        'Error',
+                        'Error adding doctor: ' + data.message,
+                        'error'
+                    );
+                }
+            });
+        });
+
+        function confirmDeleteDoctor(email) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to delete this doctor?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/admin/delete_doctor/${email}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire(
+                                'Deleted!',
+                                'The doctor has been deleted.',
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error',
+                                'Error deleting doctor: ' + data.message,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+        function logoutConfirmation() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/logout";
+                }
+            });
+        }
+
+        function goToHomePage() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will automatically logout",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, go to home page!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/home";
+                }
+            });
+        }
+
+        function openSidebar() {
+            document.getElementById('sidebar').style.left = '0';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').style.left = '-250px';
+            document.getElementById('overlay').style.display = 'none';
+        } 
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var hoverBoxes = document.querySelectorAll('.hover-box');
+
+            hoverBoxes.forEach(function (box) {
+                box.addEventListener('mouseenter', function () {
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

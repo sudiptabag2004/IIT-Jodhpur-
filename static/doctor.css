@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif; /* Use a more common font */
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #4057e8;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f8f9fa; /* White color for the brand */
+}
+
+.navbar-brand:hover {
+    color: #f8f9fa;
+}
+
+.navbar-toggler-icon {
+    background-color: #f8f9fa; /* White background for the toggler icon */
+}
+
+.navbar-toggler {
+    border: none; /* Remove border from the toggler */
+}
+
+.nav-item {
+    margin-right: 10px; /* Add some spacing between nav items */
+}
+
+.nav-link {
+    color: #f8f9fa;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #f8f9fa;
+}
+
+/* Main content */
+.container {
+    margin-top: 20px;
+    
+}
+.tom{
+    max-width:4;
+}
+h1 {
+    margin-bottom: 20px;
+}
+
+.btn-success {
+    margin-bottom: 20px;
+}
+
+/* Table */
+.table thead {
+    background-color: #6c757d; /* Darker background color for table headers */
+    color: white;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+    transition: transform 0.2s;
+}
+
+/* Modals */
+.modal-content {
+    border-radius: 20px; /* Rounded corners for modal content */
+}
+
+/* Add some margin to modals */
+.modal-dialog {
+    margin-top: 50px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Footer */
+.footer {
+    background-color: #343a40;
+    color: #f8f9fa;
+    padding: 10px 0;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+
+.search-bar-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-right: 20px;
+    width: 70%;
+}
+
+.search-bar-container input {
+    width: 200px;
+}
+
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: #111;
+    padding-top: 20px;
+    transition: 0.3s;
+    z-index: 2; /* Ensure sidebar appears above other content */
+}
+
+.sidebar img {
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.sidebar h3 {
+    color: white;
+    text-align: center;
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    text-align: center;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+.open-btn {
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+    z-index: 3; /* Ensure button appears above other content */
+}
+
+.open-btn:hover {
+    color: #818181;
+}

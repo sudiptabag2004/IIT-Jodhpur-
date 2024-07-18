@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            border-radius: 10px; /* Added border radius */
+        }
+
+        .jerry {
+            border-radius: 20px;
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Adjust z-index to ensure it's above other content */
+            background-color: #4057e8;
+        }
+
+        .navbar-nav {
+            flex-direction: row; /* Make the nav items horizontal */
+        }
+
+        .nav-item {
+            margin-left: 20px; /* Add space between nav items */
+        }
+
+        .brand-and-toggler {
+            margin-right: auto; /* Align brand to the left */
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            color: #fff;
+        }
+
+        .brand-shape {
+            display: flex;
+            align-items: center; /* Align the content vertically */
+            justify-content: center; /* Align the content horizontally */
+            background-color: #fff;
+            padding: 0.5rem;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            width: 40px; /* Adjust the width as needed */
+            height: 40px; /* Adjust the height as needed */
+            font-size: 20px; /* Adjust the font size of the "M" */
+            color: #000; /* Adjust the color of the "M" */
+        }
+
+        .brand-text {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .navbar .nav-link {
+            color: #fff;
+        }
+
+        .text-blue {
+            color: blue; /* Change this to the shade of blue you prefer */
+        }
+
+        /* Responsive styles */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                display: none; /* Hide nav items on smaller screens */
+            }
+
+            .navbar-brand {
+                flex-grow: 1; /* Allow the brand to take up available space */
+            }
+
+            .navbar-toggler {
+                display: none; /* Hide the toggler button */
+            }
+
+            .home-link {
+                display: block; /* Show the Home link on smaller screens */
+            }
+        }
+
+        @media (min-width: 992px) {
+            .home-link {
+                display: none; /* Hide the Home link on larger screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <!--<span class="brand-shape d-inline-block text-blue">M</span>-->
+                <span class="brand-text fw-7">Medico</span>
+            </a>
+            
+            <a href="/home" class="nav-link text-white text-nowrap home-link">Home</a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="/home" class="nav-link text-white text-nowrap">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white text-nowrap">About us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-5">
+        <div class="card p-4 d-flex flex-row">
+            <div class="form-section">
+                <h2 class="card-title text-center">Hey, Doc</h2>
+                <div id="formContainer" class="mt-4">
+                    <form id="loginForm" onsubmit="login(event)">
+                        <div class="mb-3"><br>
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div><br>
+                        <button type="submit" class="btn btn-primary w-100 w-md-50 d-block mx-auto">Log In</button>
+                    </form>
+                </div>
+            </div>
+            <div class="image-section">
+                <img src="static/images/login.jpg" alt="Login Image" class="img-fluid">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle login form submission
+        function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+        
+            // Make a POST request to the server for authentication
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // If login is successful, store the email in session storage
+                    sessionStorage.setItem('userEmail', email);
+                    // Redirect to the doctor page
+                    window.location.href = '/doctor';
+                } else {
+                    // If login fails, show an error message
+                    alert('Error: ' + data.message);
+                }
+            });
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
